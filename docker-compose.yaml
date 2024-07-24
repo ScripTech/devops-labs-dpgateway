@@ -1,0 +1,32 @@
+# Edilson Mucanze
+
+version: '3.6'
+
+networks:
+  dev_network:
+
+# Here I'm defining the Services -
+services:
+  ibm:
+    image: icr.io/cpopen/datapower/datapower-limited:10.0.4.0
+    container_name: datapower_gateway
+    hostname: dev-dpgateway.ezetsu
+    restart: always
+    networks:
+      - dev_network
+    ports:
+      - 9090:9090
+      - 9022:22
+      - 5550:5550
+      - 5554:5554
+      - 8000-8010:8000-8010
+    environment:
+      DATAPOWER_ACCEPT_LICENSE: true
+      DATAPOWER_INTERACTIVE: true
+      DATAPOWER_WORKER_THREADS: 4
+      DATAPOWER_LOG_COLOR: true
+    volumes:
+      - ./lab-dev/container_data/configs:/opt/ibm/datapower/drouter/config:Z
+      - ./lab-dev/container_data/local:/opt/ibm/datapower/drouter/local:Z
+      - ./lab-dev/container_data/certs:/opt/ibm/datapower/root/secure/usrcerts:Z
+      - ./lab-dev/container_data/etc/nsswitch.conf:/etc/nsswitch.conf:Z
